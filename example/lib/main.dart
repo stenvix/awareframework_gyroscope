@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
 
     sensor = new GyroscopeSensor(config);
 
+    sensor.start();
   }
 
   @override

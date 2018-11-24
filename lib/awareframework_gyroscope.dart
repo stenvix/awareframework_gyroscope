@@ -13,12 +13,12 @@ class GyroscopeSensor extends AwareSensorCore {
   GyroscopeSensor(GyroscopeSensorConfig config):this.convenience(config);
   GyroscopeSensor.convenience(config) : super(config){
     /// Set sensor method & event channels
-    super.setSensorChannels(_gyroscopeMethod, _gyroscopeStream);
+    super.setMethodChannel(_gyroscopeMethod);
   }
 
   /// A sensor observer instance
-  Stream<Map<String,dynamic>> get onDataChanged {
-     return super.receiveBroadcastStream("on_data_changed").map((dynamic event) => Map<String,dynamic>.from(event));
+  Stream<Map<String,dynamic>> onDataChanged(String id) {
+     return super.getBroadcastStream(_gyroscopeStream,"on_data_changed", id).map((dynamic event) => Map<String,dynamic>.from(event));
   }
 }
 
@@ -36,9 +36,10 @@ class GyroscopeSensorConfig extends AwareSensorConfig{
 
 /// Make an AwareWidget
 class GyroscopeCard extends StatefulWidget {
-  GyroscopeCard({Key key, @required this.sensor}) : super(key: key);
+  GyroscopeCard({Key key, @required this.sensor, this.cardId="gyroscope_card"} ) : super(key: key);
 
   GyroscopeSensor sensor;
+  String cardId;
 
   @override
   GyroscopeCardState createState() => new GyroscopeCardState();
@@ -57,7 +58,7 @@ class GyroscopeCardState extends State<GyroscopeCard> {
 
     super.initState();
     // set observer
-    widget.sensor.onDataChanged.listen((event) {
+    widget.sensor.onDataChanged(widget.cardId).listen((event) {
       setState((){
         if(event!=null){
           DateTime.fromMicrosecondsSinceEpoch(event['timestamp']);
@@ -84,6 +85,13 @@ class GyroscopeCardState extends State<GyroscopeCard> {
       title: "Gyroscope",
       sensor: widget.sensor
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    widget.sensor.cancelBroadcastStream(widget.cardId);
+    super.dispose();
   }
 
 }

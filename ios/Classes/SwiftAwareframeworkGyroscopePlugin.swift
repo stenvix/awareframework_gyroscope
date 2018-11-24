@@ -31,11 +31,13 @@ public class SwiftAwareframeworkGyroscopePlugin: AwareFlutterPluginCore, Flutter
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         // add own channel
-        super.setChannels(with: registrar,
-                          instance: SwiftAwareframeworkGyroscopePlugin(),
-                          methodChannelName: "awareframework_gyroscope/method",
-                          eventChannelName: "awareframework_gyroscope/event")
-
+        let instance =  SwiftAwareframeworkGyroscopePlugin()
+        super.setMethodChannel(with: registrar,
+                          instance: instance,
+                          channelName:"awareframework_gyroscope/method")
+        super.setEventChannels(with: registrar,
+                               instance: instance,
+                               channelNames: ["awareframework_gyroscope/event"])
     }
 
     public func onDataChanged(data: GyroscopeData) {
