@@ -22,10 +22,11 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     config = GyroscopeSensorConfig()
+      ..frequency = 100
+      ..dbType = 1
       ..debug = true;
 
     sensor = new GyroscopeSensor(config);
-
     sensor.start();
   }
 

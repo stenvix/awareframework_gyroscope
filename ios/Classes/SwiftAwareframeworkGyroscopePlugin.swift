@@ -1,6 +1,5 @@
 import Flutter
 import UIKit
-import SwiftyJSON
 import com_awareframework_ios_sensor_gyroscope
 import com_awareframework_ios_sensor_core
 import awareframework_core
@@ -12,8 +11,7 @@ public class SwiftAwareframeworkGyroscopePlugin: AwareFlutterPluginCore, Flutter
     public func initializeSensor(_ call: FlutterMethodCall, result: @escaping FlutterResult) -> AwareSensor? {
         if self.sensor == nil {
             if let config = call.arguments as? Dictionary<String,Any>{
-                let json = JSON.init(config)
-                self.gyroscopeSensor = GyroscopeSensor.init(GyroscopeSensor.Config(json))
+                self.gyroscopeSensor = GyroscopeSensor.init(GyroscopeSensor.Config(config))
             }else{
                 self.gyroscopeSensor = GyroscopeSensor.init(GyroscopeSensor.Config())
             }

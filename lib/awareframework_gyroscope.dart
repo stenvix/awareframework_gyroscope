@@ -17,29 +17,41 @@ class GyroscopeSensor extends AwareSensorCore {
   }
 
   /// A sensor observer instance
-  Stream<Map<String,dynamic>> onDataChanged(String id) {
-     return super.getBroadcastStream(_gyroscopeStream,"on_data_changed", id).map((dynamic event) => Map<String,dynamic>.from(event));
+  Stream<Map<String,dynamic>> get onDataChanged {
+     return super.getBroadcastStream(_gyroscopeStream,"on_data_changed").map((dynamic event) => Map<String,dynamic>.from(event));
   }
+
+  @override
+  void cancelAllEventChannels() {
+    super.cancelBroadcastStream("on_data_changed");
+  }
+
 }
 
 class GyroscopeSensorConfig extends AwareSensorConfig{
   GyroscopeSensorConfig();
 
-  /// TODO
+  int frequency    = 5;
+  double period    = 1.0;
+  double threshold = 0.0;
 
   @override
   Map<String, dynamic> toMap() {
     var map = super.toMap();
+    map['frequency'] = frequency;
+    map['period']    = period;
+    map['threshold'] = threshold;
     return map;
   }
 }
 
 /// Make an AwareWidget
 class GyroscopeCard extends StatefulWidget {
-  GyroscopeCard({Key key, @required this.sensor, this.cardId="gyroscope_card"} ) : super(key: key);
+  GyroscopeCard({Key key, @required this.sensor, this.height = 250.0, this.bufferSize = 299} ) : super(key: key);
 
-  GyroscopeSensor sensor;
-  String cardId;
+  final GyroscopeSensor sensor;
+  final double height;
+  final int bufferSize;
 
   @override
   GyroscopeCardState createState() => new GyroscopeCardState();
@@ -51,20 +63,19 @@ class GyroscopeCardState extends State<GyroscopeCard> {
   List<LineSeriesData> dataLine1 = List<LineSeriesData>();
   List<LineSeriesData> dataLine2 = List<LineSeriesData>();
   List<LineSeriesData> dataLine3 = List<LineSeriesData>();
-  int bufferSize = 299;
 
   @override
   void initState() {
 
     super.initState();
     // set observer
-    widget.sensor.onDataChanged(widget.cardId).listen((event) {
+    widget.sensor.onDataChanged.listen((event) {
       setState((){
         if(event!=null){
           DateTime.fromMicrosecondsSinceEpoch(event['timestamp']);
-          StreamLineSeriesChart.add(data:event['x'], into:dataLine1, id:"x", buffer: bufferSize);
-          StreamLineSeriesChart.add(data:event['y'], into:dataLine2, id:"y", buffer: bufferSize);
-          StreamLineSeriesChart.add(data:event['z'], into:dataLine3, id:"z", buffer: bufferSize);
+          StreamLineSeriesChart.add(data:event['x'], into:dataLine1, id:"x", buffer: widget.bufferSize);
+          StreamLineSeriesChart.add(data:event['y'], into:dataLine2, id:"y", buffer: widget.bufferSize);
+          StreamLineSeriesChart.add(data:event['z'], into:dataLine3, id:"z", buffer: widget.bufferSize);
         }
       });
     }, onError: (dynamic error) {
@@ -78,7 +89,7 @@ class GyroscopeCardState extends State<GyroscopeCard> {
   Widget build(BuildContext context) {
     return new AwareCard(
       contentWidget: SizedBox(
-          height:250.0,
+          height:widget.height,
           width: MediaQuery.of(context).size.width*0.8,
           child: new StreamLineSeriesChart(StreamLineSeriesChart.createTimeSeriesData(dataLine1, dataLine2, dataLine3)),
         ),
@@ -86,12 +97,4 @@ class GyroscopeCardState extends State<GyroscopeCard> {
       sensor: widget.sensor
     );
   }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    widget.sensor.cancelBroadcastStream(widget.cardId);
-    super.dispose();
-  }
-
 }
