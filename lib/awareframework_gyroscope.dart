@@ -53,16 +53,16 @@ class GyroscopeCard extends StatefulWidget {
   final double height;
   final int bufferSize;
 
+  final List<LineSeriesData> dataLine1 = List<LineSeriesData>();
+  final List<LineSeriesData> dataLine2 = List<LineSeriesData>();
+  final List<LineSeriesData> dataLine3 = List<LineSeriesData>();
+
   @override
   GyroscopeCardState createState() => new GyroscopeCardState();
 }
 
 
 class GyroscopeCardState extends State<GyroscopeCard> {
-
-  List<LineSeriesData> dataLine1 = List<LineSeriesData>();
-  List<LineSeriesData> dataLine2 = List<LineSeriesData>();
-  List<LineSeriesData> dataLine3 = List<LineSeriesData>();
 
   @override
   void initState() {
@@ -73,9 +73,9 @@ class GyroscopeCardState extends State<GyroscopeCard> {
       setState((){
         if(event!=null){
           DateTime.fromMicrosecondsSinceEpoch(event['timestamp']);
-          StreamLineSeriesChart.add(data:event['x'], into:dataLine1, id:"x", buffer: widget.bufferSize);
-          StreamLineSeriesChart.add(data:event['y'], into:dataLine2, id:"y", buffer: widget.bufferSize);
-          StreamLineSeriesChart.add(data:event['z'], into:dataLine3, id:"z", buffer: widget.bufferSize);
+          StreamLineSeriesChart.add(data:event['x'], into:widget.dataLine1, id:"x", buffer: widget.bufferSize);
+          StreamLineSeriesChart.add(data:event['y'], into:widget.dataLine2, id:"y", buffer: widget.bufferSize);
+          StreamLineSeriesChart.add(data:event['z'], into:widget.dataLine3, id:"z", buffer: widget.bufferSize);
         }
       });
     }, onError: (dynamic error) {
@@ -87,11 +87,12 @@ class GyroscopeCardState extends State<GyroscopeCard> {
 
   @override
   Widget build(BuildContext context) {
+    var data = StreamLineSeriesChart.createTimeSeriesData(widget.dataLine1, widget.dataLine2, widget.dataLine3);
     return new AwareCard(
       contentWidget: SizedBox(
           height:widget.height,
           width: MediaQuery.of(context).size.width*0.8,
-          child: new StreamLineSeriesChart(StreamLineSeriesChart.createTimeSeriesData(dataLine1, dataLine2, dataLine3)),
+          child: new StreamLineSeriesChart(data),
         ),
       title: "Gyroscope",
       sensor: widget.sensor
