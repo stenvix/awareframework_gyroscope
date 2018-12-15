@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:awareframework_gyroscope/awareframework_gyroscope.dart';
 import 'package:awareframework_core/awareframework_core.dart';
 
@@ -23,10 +21,10 @@ class _MyAppState extends State<MyApp> {
 
     config = GyroscopeSensorConfig()
       ..frequency = 100
-      ..dbType = 1
+      ..dbType = DatabaseType.DEFAULT
       ..debug = true;
 
-    sensor = new GyroscopeSensor(config);
+    sensor = new GyroscopeSensor.init(config);
     sensor.start();
   }
 

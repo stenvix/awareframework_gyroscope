@@ -35,7 +35,8 @@ public class SwiftAwareframeworkGyroscopePlugin: AwareFlutterPluginCore, Flutter
                           channelName:"awareframework_gyroscope/method")
         super.setEventChannels(with: registrar,
                                instance: instance,
-                               channelNames: ["awareframework_gyroscope/event"])
+                               channelNames: ["awareframework_gyroscope/event",
+                                              "awareframework_gyroscope/event_on_data_changed"])
     }
 
     public func onDataChanged(data: GyroscopeData) {

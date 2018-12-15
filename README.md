@@ -1,6 +1,8 @@
 # Aware Gyroscope
 
-TODO
+[![Build Status](https://travis-ci.com/awareframework/awareframework_gyroscope.svg?branch=master)](https://travis-ci.com/awareframework/awareframework_gyroscope)
+
+The Gyroscope Sensor allows us to retrieve data from the onboard gyroscopes.
 
 ## Install the plugin into project
 1. Edit `pubspec.yaml`
@@ -16,13 +18,14 @@ import 'package:awareframework_core/awareframework_core.dart';
 ```
 
 ## Public functions
-### gyroscope Sensor
+### Gyroscope Sensor
 - `start()`
 - `stop()` 
-- `sync(force: Boolean)`
+- `sync(boolean force)`
 - `enable()`
 - `disable()`
 - `isEnable()`
+- `setLabel(String label)`
 
 ### Configuration Keys
 
@@ -53,12 +56,12 @@ var config = GyroscopeSensorConfig()
 // init sensor
 var sensor = new GyroscopeSensor(config);
 
-void mathod(){
+void method(){
     /// start 
     sensor.start();
     
     /// set observer
-    sensor.onDataChanged.listen((Map<String,dynamic> result){
+    sensor.onDataChanged.listen(GyroscopeData result){
       setState((){
         // Your code here
       });
