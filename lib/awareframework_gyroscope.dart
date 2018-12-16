@@ -49,7 +49,7 @@ import 'package:flutter/material.dart';
 /// ```
 class GyroscopeSensor extends AwareSensor {
   static const MethodChannel _gyroscopeMethod = const MethodChannel('awareframework_gyroscope/method');
-  static const EventChannel  _gyroscopeStream  = const EventChannel('awareframework_gyroscope/event');
+//  static const EventChannel  _gyroscopeStream  = const EventChannel('awareframework_gyroscope/event');
 
   static const EventChannel  _onDataChangedStream  = const EventChannel('awareframework_gyroscope/event_on_data_changed');
 

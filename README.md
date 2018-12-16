@@ -21,7 +21,7 @@ import 'package:awareframework_core/awareframework_core.dart';
 ### Gyroscope Sensor
 - `start()`
 - `stop()` 
-- `sync(boolean force)`
+- `sync(bool force)`
 - `enable()`
 - `disable()`
 - `isEnable()`
@@ -54,14 +54,14 @@ var config = GyroscopeSensorConfig()
   ..label = "label";
 
 // init sensor
-var sensor = new GyroscopeSensor(config);
+var sensor = new GyroscopeSensor.init(config);
 
 void method(){
     /// start 
     sensor.start();
     
     /// set observer
-    sensor.onDataChanged.listen(GyroscopeData result){
+    sensor.onDataChanged.listen((GyroscopeData result){
       setState((){
         // Your code here
       });
